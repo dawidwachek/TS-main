@@ -1,0 +1,58 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="body-center">
+        <div class="container">
+            <form method="POST">
+                {% csrf_token %}
+                    <h3>order #{{order.order_id}} </h3>
+                    <h5>order status: {{order.get_order_status_display}} </h5>
+                    <h5>your questionnaire: {{order.questionnaire_id}} </h5>
+                    <h5>Price: {{order.pay_price}} </h5>
+                    {%if order.get_order_status_display == 'Payment Accepted'%}
+                        
+                        <div>
+                            <h4>Your Training:  </h4>
+                            <a class="small_text_button">training ID {{training_id}}</a>
+                        </div>
+                    {%endif%}
+                    
+
+                    {%if order.get_order_status_display == 'Order Created'%}
+                        
+                        <div>
+                            <button type="submit">Pay order</button>
+                        </div>
+                    {%endif%}
+
+                    {%if order.get_order_status_display == 'Waiting for Payment'%}
+                        
+                        <div>
+                            <button type="submit">Pay order</button>
+                        </div>
+                    {%endif%}
+                    {%if order.get_order_status_display == 'Payment Error'%}
+                        
+                        <div>
+                            <button type="submit">Pay order</button>
+                        </div>
+                    {%endif%}
+                
+              </form>
+            
+            
+            
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>

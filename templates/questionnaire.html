@@ -1,0 +1,32 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="body-center">
+        <div class="container">
+            <h1> Hello, </h1>
+            <h3>create your training</h3>
+            <h3>complete your survey and start training</h3>
+            <form method="POST">
+                {% csrf_token %}
+                    <div>
+                        <button type="submit">Let's start</button>
+                    </div>
+                
+              </form>
+            
+            
+            
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>

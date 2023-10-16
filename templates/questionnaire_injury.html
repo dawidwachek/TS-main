@@ -1,0 +1,35 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="home">
+        <div class="home-content">
+            <h1> Hello, </h1>
+            <h3>I'm training now</h3>
+            <h3>Questionnaire injury</h3>
+            <form name="form_type" value="formTwo" method="post">
+                {% csrf_token %}
+                    {{form}}
+                    
+                    <div>
+                        <button type="submit">Next</button>
+                      
+                    </div>
+                
+              </form>
+            
+            
+            
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>

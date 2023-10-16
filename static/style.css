@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --clr-background: #ffffff;
+    --clr-text-black:#444444;
+    --clr-text-white: #ffffff;
+    --clr-text-background: #444444;
+    --clr-container-background:#006eff91;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins','sans-serif';
+}
+
+
+
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 30px;
+    color: var(--clr-text);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5%;
+}
+
+.box {
+    font-size: 15px;
+    color: var(--clr-text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.navbar{
+    display: block;
+    margin-right: 5%;
+}
+
+.navbar a{
+    font-size: 16px;
+    color: var(--clr-text);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 15px;
+    transition: .3s;
+}
+
+.navbar a:hover,
+.navbar a:active{
+    color: var(--clr-container-background);
+}
+
+.body-column{
+    align-content: flex-start;
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+}
+.body-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+
+}
+.full-body-center{
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    
+}
+.banner-home{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5% 0 3%;
+}
+.full-text{
+    font-size: 40px;
+}
+
+.first-row{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    padding: 2%;
+    margin: 0 3% 0;
+    border-radius: 1rem;
+    background-color: var(--clr-container-background);
+}
+
+.second-row{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    padding: 2%;
+    margin: 0 3% 0;
+}
+
+.coupon-container{
+    align-content: flex-start;
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+}
+.coupon-item{
+    flex: 1;
+}
+
+.button-home{
+    background-color: var(--clr-container-background);
+}
+
+.left-column{
+    flex: 1;
+    padding: 50px;
+}
+.center-column{
+    flex: 1;
+    padding:50px;
+    
+}
+
+.right-column{
+    flex: 1;
+    padding: 50px;
+}
+
+.container{
+    background-color: var(--clr-container-background);
+    padding: 20px;
+    border-radius: 20px;
+    
+}
+
+.order_button{
+    background-color: var(--clr-text-background);
+    color: var(--clr-text-white);
+    padding: 4px 24px;
+    border-radius: 1rem;
+    text-decoration: none;
+    margin-top: 15px;
+}
+
+
+
+.order_button_container{
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.button{
+    text-decoration: none;
+    color: var(--clr-text-white);
+    background-color: var(--clr-text-background);
+    padding: 4px 24px;
+    border-radius: 1rem;
+    margin-left: 15px;
+    transition: .3s;
+    
+}
+
+.button::after,
+.button:hover{
+    background-color: var(--clr-container-background);
+}
+
+.text-button{
+    font-size: 16px;
+    color: var(--clr-text);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 15px;
+    transition: .3s;
+}
+
+.text-button:hover,
+.text-button:active{
+    color: var(--clr-container-background);
+}
+
+
+.small_text_button{
+    text-decoration: none;
+    color: var(--clr-text-white);
+}
+
+.button-container{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.error_text{
+    color: red;
+}
+
+
+@media screen and (max-width: 960px) {
+    .box{
+        visibility: collapse;
+        width: 0;
+        height: 0;
+    }
+
+    .body_column{
+        flex-direction: column;
+    }
+    .left_column{
+        padding: 65px;
+    }
+    .right_column{
+        padding: 15px;
+    }
+    
+}
+
+
+
+@media screen and (max-width: 595px) {
+    .header{
+        display: grid;
+    }
+    .box{
+        height: 0;
+    }
+    .navbar {
+        margin-right: 0%;
+    }
+
+
+}
+
+@media screen and (max-width: 450px) {
+
+    .body{
+        font-size: 14px;
+    }
+    
+    
+    .auth-container{
+        width: 300px;
+    }
+}
