@@ -38,7 +38,7 @@ def NewUserBot(user_id, user_email, user_name):
     new_account_webhook.execute()
 
 def HostBot():
-    host_start_stop = False
+    host_start_stop = True
     status_debug = settings.DEBUG
     if host_start_stop:
         if status_debug:
