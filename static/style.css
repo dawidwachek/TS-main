@@ -65,7 +65,7 @@
     color: var(--clr-container-background);
 }
 
-.body-column{
+.body_column{
     align-content: flex-start;
     display: flex;
     overflow: hidden;
@@ -256,6 +256,9 @@
 
     .body{
         font-size: 14px;
+    }
+    .body_column{
+        flex-direction: column;
     }
     
     

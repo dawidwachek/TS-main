@@ -27,7 +27,7 @@ class Coupon(models.Model):
         ("AM", "amount"),], null=True , max_length=255)
     assigment = models.BooleanField(default=False)
     email_assignment = models.EmailField(blank=True, default=None, null=True)
-    max_value_coupon = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    max_value_coupon = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     start_date_use = models.DateField(default=None, blank=True, null=True)
     end_date_use = models.DateField(default=None, blank=True, null=True)
 

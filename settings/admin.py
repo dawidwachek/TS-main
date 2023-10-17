@@ -11,9 +11,9 @@ class RegulationAdmin(admin.ModelAdmin):
 
 @admin.register(Price)
 class PriceAdmin(admin.ModelAdmin):
-    list_display = ['price_id', 'currency', 'is_active', 'valid_at', 'price']
+    list_display = ['price_id', 'currency', 'is_active', 'valid_at', 'price', 'price_model']
     readonly_fields = ['created_at']
-    list_filter = ['currency', 'is_active', 'valid_at', 'price']
+    list_filter = ['currency', 'is_active', 'valid_at', 'price', 'price_model']
 
 
 @admin.register(ActivityLog)

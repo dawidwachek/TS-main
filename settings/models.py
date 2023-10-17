@@ -32,6 +32,11 @@ class Price(models.Model):
     ], max_length=5)
     valid_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
+    price_model = models.CharField(choices=[
+        ('ALL', 'Personalized'), #all personalized
+        ('BS', 'Business Small'), #manual training 
+        ('BB', 'Business Big') #trainer model bussines
+    ], max_length=255, default="ALL")
 
 class ActivityLog(models.Model):
     activity_id = models.AutoField(primary_key=True)

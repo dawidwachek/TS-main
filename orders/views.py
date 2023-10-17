@@ -30,7 +30,7 @@ def order(request, order_id):
 
                 
                 order_pay.update(order_status = "PA")
-                OrderBot(order_id=order_id, user_email=request.user.email, pay_price=price)
+                #OrderBot(order_id=order_id, user_email=request.user.email, pay_price=price)
                 return redirect('paymentsuccess')
             
         else:
@@ -47,10 +47,9 @@ def order(request, order_id):
 def payment(request, order_id):
     order = Order.objects.filter(order_id = order_id).get()
     order_pay = Order.objects.filter(order_id = order_id)
+    new_price = order.pay_price
     if request.method == "POST":
-        if 'button_pay' in request.POST:
-            print("pay")
-        elif 'button_coupon' in request.POST:
+        if 'button_coupon' in request.POST:
             user_email = request.user.email
             coupon_name = request.POST.get("coupon_field")
             base_price = UserProxy.objects.get(email = user_email).price_base
@@ -58,8 +57,13 @@ def payment(request, order_id):
             coupon = CheckingCoupon(user_email=user_email,coupon_name=coupon_name, base_price=base_price)
             new_price = coupon.get('price_coupon')
             error = coupon.get('error_coupon')
-            print(str(error))
+            order_pay.update(pay_price=new_price)
+            
+            #print(str(error))
             return render(request, 'payment.html',{'order': order, 'new_price': new_price, 'error': error})
+        if 'button_pay' in request.POST:
+            OrderBot(order_id=order_id, user_email=request.user.email, pay_price=new_price)
+            return redirect('order', order.pk) 
     else:
         return render(request, 'payment.html', {'order': order})
     return render(request, 'payment.html', {'order': order})
