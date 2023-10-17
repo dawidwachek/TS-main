@@ -12,7 +12,7 @@ urlpatterns = [
     path('accounts/',include('accounts.urls')),
     path('orders/',include('orders.urls')),
     path('reflink/',include('promotions.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = "Training administration"
 admin.site.index_title = "You can change what you can"

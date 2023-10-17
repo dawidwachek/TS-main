@@ -7,7 +7,7 @@ class Reflink(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     uses_reflink = models.DecimalField(max_digits=10, decimal_places=0, default=0)
-    link_reflink = models.TextField(default="reflink/"+"working at this :)")
+    link_reflink = models.TextField(default="your reflink is domain + reflink/ + id reflink"+"working at this :)")
 
     def __str__(self):
         #return self.item_id
