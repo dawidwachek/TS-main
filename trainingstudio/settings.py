@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-x-pwt2xz9f_6!nayv7bo4%k!g#cg8(o9+54*3o0fh!d@h&8n9g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.1.148", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.1.148", "127.0.0.1", 'dawidw.pythonanywhere.com']
 
 handler404 = 'core.views.error404'
 

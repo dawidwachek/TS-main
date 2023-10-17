@@ -17,30 +17,30 @@ def CheckingCoupon(user_email, coupon_name, base_price):
 
     #negative type coupon
     if not coupon:
-        error = "Coupon not exist"
+        error = "Coupon not exist [6]"
         return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
     if coupon:
         if coupon.is_active == False:
-            error = "coupon is not active"
+            error = "coupon is not active [1]"
             return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
-        if coupon.max_uses_coupon != 0:
+        if coupon.max_uses_coupon != None:
             if coupon.uses_coupon >= coupon.max_uses_coupon:
-                error = "the coupon is used up"
+                error = "the coupon is used up [2]"
                 return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
         
         if coupon.start_date_use != None:
             if date.today() < coupon.start_date_use:
-                error = "coupon is not active"
+                error = "coupon is not active [3]"
                 return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
         if coupon.end_date_use != None:
             if date.today() > coupon.end_date_use:
-                error = "coupon is not active"
+                error = "coupon is not active [4]"
                 return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
 
 
         #positive type coupon
         if coupon.zero_amount == True:
-            price_coupon = base_price
+            price_coupon = 0
             return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
 
         if coupon.assigment:
@@ -65,11 +65,16 @@ def CheckingCoupon(user_email, coupon_name, base_price):
 
                 #here end type
             if user_email != coupon.email_assignment:
-                error = "coupon is not for you"
+                error = "coupon is not for you [5]"
                 return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
 
 
-    
+# # 1. not active
+# # 2. max uses coupon
+# # 3. start date
+# # 4. end date
+# # 5. couopon for user
+# # 6. not coupon
 
 
     return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
