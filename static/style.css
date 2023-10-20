@@ -245,9 +245,13 @@
     .box{
         height: 0;
     }
+    .body_column{
+        flex-direction: column;
+    }
     .navbar {
         margin-right: 0%;
     }
+
 
 
 }
