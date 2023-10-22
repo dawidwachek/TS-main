@@ -40,10 +40,6 @@ def NewUserBot(user_id, user_email, user_name):
 def HostBot():
     host_start_stop = True
     status_debug = settings.DEBUG
-<<<<<<< HEAD
-
-=======
->>>>>>> 3ac08179f0443d1f6ea1dcbd79c9a63431a9be4a
     if host_start_stop:
         if status_debug:
             embed = DiscordEmbed(title="LocalHost UP!!", description="", color="FF9632")
