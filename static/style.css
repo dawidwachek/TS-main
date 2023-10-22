@@ -248,6 +248,12 @@
     .body_column{
         flex-direction: column;
     }
+    .left_column{
+        padding: 65px;
+    }
+    .right_column{
+        padding: 15px;
+    }
     .navbar {
         margin-right: 0%;
     }
@@ -263,6 +269,12 @@
     }
     .body_column{
         flex-direction: column;
+    }
+    .left_column{
+        padding: 65px;
+    }
+    .right_column{
+        padding: 15px;
     }
     
     
