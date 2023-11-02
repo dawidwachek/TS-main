@@ -29,10 +29,10 @@ def login(request):
             
 
             #checking login form
-            if email is "":
+            if email == "":
                 error = "empty adress e-mail"
                 return render(request, 'login.html',{'error': error})
-            if password is "" :
+            if password == "" :
                 error = "empty password"
                 return render(request, 'login.html',{'error': error})
             if len(password) <= 6:
@@ -80,7 +80,7 @@ def register(request):
         
 
         #checking register form
-        if email is "":
+        if email == "":
             error = "empty adress e-mail"
             return render(request, 'register.html',{'error': error})
           
@@ -88,7 +88,7 @@ def register(request):
             error = "e-mail is used"
             return render(request, 'register.html',{'error': error})
         
-        if password is "" :
+        if password == "" :
             error = "empty password"
             return render(request, 'register.html',{'error': error})
         
@@ -143,9 +143,6 @@ def register(request):
     
 @login_required(redirect_field_name="login")
 def profile(request):
-    #user_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[0].strip()
-    #print(str(user_ip))
-
     obj = UserProxy.objects.filter(email=request.user.email)
     if not obj:
         return redirect('register_more_info')   

@@ -1,18 +1,18 @@
 {% include 'base.html' %}
 
 {% block content %}
-{% include 'navbar.html' %}
 
 
 
-<body>
+
+<body class="column">
     
-    
+    {% include 'navbar.html' %}
 
     
     
-    <section class="body_column">
-        <div class="left-column">
+    <section class="body row">
+        <div class="content">
             <h1> Hello {{user_proxy.first_name}}, </h1>
             <div>
                 <h5>Name: {{user_proxy.first_name}} {{user_proxy.last_name}} </h5>
@@ -33,15 +33,15 @@
             </div>
 
         </div>
-        <div class="right-column">
+        <div class="content">
             <div>
                 <div>
-                    <h5> Order list: </h5>
+                    <h1> Order list: </h1>
                 </div>
-                <div class="container">
+                <div class="list container padding">
                     {% for order in orders reversed %}
 
-                        <div class="order_view">
+                        <div class="content">
                             <div class="order_informations">
                                 <h5>order #{{order.order_id}} </h5>
                                 <h5>order status: {{order.get_order_status_display}} </h5>

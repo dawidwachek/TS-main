@@ -1,10 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,  PermissionsMixin
+from django.contrib.auth.models import Permission
 from orders.models import Item
+from django.utils.translation import gettext as _
+
 
 class UserManager(BaseUserManager):
     
-    def create_user(self, email, password):
+    def create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError("user must have an email address")
         email = self.normalize_email(email)
@@ -24,9 +27,17 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_superadmin = True
         user.save(using=self._db)
+        user.has_perm()
         
         return user
     
+class Permissions(Permission):
+    class Meta:
+        permissions = [
+            ("can_do_something", "Can do something special"),
+            # Dodaj inne uprawnienia
+        ]
+        
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -36,11 +47,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superadmin = models.BooleanField(default=False)
-    #date_birthday = models.CharField(max_length=30, blank=True)
-    #random = models.CharField(max_length=30, blank=True)
     groups = None
     last_login = None
-    user_permissions = None
+    #user_permissions = None
+    #user_permissions = models.ManyToManyField(Permission, blank=True, default=None)
+    user_permissions = models.ManyToManyField(
+        verbose_name=_('user permissions'),
+        blank=True,
+        related_name='user_set',
+        related_query_name='user',to='auth.permission',
+    )
+    
+
+    #perm = models.ManyToManyField(Permission, blank=True, default=None)
+    
     is_staff = True
     #user_data = models.ForeignKey('accounts.UserData', related_name="users", null=True, blank=True, on_delete=models.CASCADE)
 
@@ -54,17 +74,28 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_superuser(self):
-        return self.is_admin
+        
+        return self.is_superadmin
 
     @property
     def is_staff(self):
        return self.is_admin
 
     def has_perm(self, perm, obj=None):
-       return self.is_admin
+        #print("perm: " + str(self.get_user_permissions))
+        if self.is_superuser:
+            return self.is_admin
+        else:
+            return self.is_admin
+            #return self.user_permissions.filter(codename=perm).exists()
+        
+    
 
+    def custom_perm(self):
+        print('cust perm: '+ str(self.user_permissions))
+        return self.user_permissions
     def has_module_perms(self, app_label):
-       return self.is_admin
+        return self.is_admin
 
     @is_staff.setter
     def is_staff(self, value):

@@ -29,7 +29,7 @@ class Price(models.Model):
     currency = models.CharField(choices=[
         ('PL', 'PLN'),
         ('EN', 'GBP')
-    ], max_length=5)
+    ],default="PL", max_length=5)
     valid_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
     price_model = models.CharField(choices=[
