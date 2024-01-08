@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,  PermissionsMixin
 from django.contrib.auth.models import Permission
-from orders.models import Item
+from settings.models import Regulation
 from django.utils.translation import gettext as _
 
 
@@ -41,6 +41,7 @@ class Permissions(Permission):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.AutoField(primary_key=True)
     username = None
     email = models.EmailField(max_length=100, unique=True)
     is_admin = models.BooleanField(default=False)
@@ -80,20 +81,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
        return self.is_admin
+    
+    print('self:', str(user_permissions.get_choices))
 
     def has_perm(self, perm, obj=None):
-        #print("perm: " + str(self.get_user_permissions))
+
         if self.is_superuser:
             return self.is_admin
         else:
             return self.is_admin
-            #return self.user_permissions.filter(codename=perm).exists()
         
     
-
-    def custom_perm(self):
-        print('cust perm: '+ str(self.user_permissions))
-        return self.user_permissions
+    
     def has_module_perms(self, app_label):
         return self.is_admin
 
@@ -104,34 +103,58 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class UserProxy(models.Model):
+    id = models.AutoField(primary_key=True)
+
+    #user
     first_name = models.CharField(max_length=15, null=True, blank=True)
     last_name = models.CharField(max_length=15, null=True, blank=True)
+    
+    #contact
     email = models.EmailField(max_length=100, unique=True)
     phone_number = models.DecimalField(max_digits=9, decimal_places=0, null=True, blank=True, default="123456789")
-    city = models.CharField(max_length=255, null=True, blank=True,default=None)
-
+    
+    #adress
     date_birthday = models.DateField(null=True, blank=True)
+    
+    
+    #survey
     first_step = models.BooleanField(default=True)
     first_order = models.BooleanField(default=True)
    
+    #consents
     regulations = models.BooleanField(default=False)
-    regulations_id = models.DecimalField(max_digits=3, decimal_places=0, null=True, blank=True)
+    regulations_id = models.ForeignKey(Regulation, on_delete=models.DO_NOTHING, default=None, null=True, blank=True)
     active_sub = models.BooleanField(default=False)
     id_sub = models.DecimalField(max_digits=7,decimal_places=0,blank=True, null=True)
 
+    #price
     price_base = models.DecimalField(max_digits=7, decimal_places=2, null=True)
 
-    
-    
-    #last_name = models.CharField(max_length=15, null=True, blank=True, default="")
-    
+
 
     def __str__(self):
         return self.email
-    
-    #orders = Order.objects.all()
-    #items = Item.objects.all()
-    #print(items)
-    #item_list = models.CharField(choices=items.query, max_length=255)
+
     def __int__(self):
         return self.email
+    
+
+class CustomerAdress(models.Model):
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, default=None, unique=True, )
+    #email = models.EmailField
+    city = models.CharField(max_length=255, null=True, blank=True,default=None)
+    post_code = models.CharField(max_length=7, null=True, blank=True,default=None)
+    adress_line_1 = models.CharField(max_length=255, null=True, blank=True,default=None)
+    adress_line_2 = models.CharField(max_length=255, null=True, blank=True,default=None)
+    country = models.CharField(max_length=255, null=True, blank=True,default=None)
+    adress_type = models.CharField(choices=[
+        ('BI','billing'),
+        ('DE','delivery'),
+    ], max_length=100, default='BI')
+
+    def __str__(self):
+        return f'{self.user}'    
+    
+    
+    class Meta:
+        verbose_name_plural = "Customer Adress"

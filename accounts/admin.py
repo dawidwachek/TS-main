@@ -4,49 +4,13 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import permission_required
 
 
-from .models import User, UserProxy
+from .models import User, UserProxy, CustomerAdress
 
 
-class ReadOnlyAdminMixin:
-    def has_permission(self, request, obj, action):
-        opts = self.opts
-        code_name = f'{action}_{opts.model_name}'
-        if obj:
-            return request.user.has_perm(f'{opts.app_label}.{code_name}', obj)
-        else:
-            return True
-
-    def has_delete_permission(self, request, obj=None):
-        
-        return True
-        #return self.has_permission(request, obj, 'delate')
-   
-    def has_add_permission(self, request, obj=None):
-        if request.user.has_perm('user.add_user'):
-            return self.has_permission(request, obj, 'add')
-        else:
-            return False
-        #return self.has_permission(request, obj, 'add')
-    
-    def has_change_permission(self, request, obj=None):
-        return True
-    def has_view_permission(self, request, obj=None):
-        #print('self: '+ str(self)+ " request: "+ str(request))
-        return True
-        #return self.has_permission(request, obj, 'view')
-
-
-#@permission_required('accounts.view_user')
 @admin.register(User)
-class UserAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
-    #cust = CustPerm.has_cust_perm(self=)
-    #print ('custom: '+ str(cust))
-    #def has_add_permission(self, request, obj=None):
-        #return ReadOnlyAdminMixin.has_add_permission(self, request=request)
-    #def has_permission(self, request, obj, action):
-        #print('perm:: '+ str(self)+ " request: " +str(request)+ " obj: " +str(obj) + " action: "+ str(action))
+class UserAdmin(admin.ModelAdmin):
 
-
+    print('self:')
 
     list_display = ['email', 'is_admin', 'is_superuser', 'is_staff']
     fieldsets = [
@@ -60,34 +24,52 @@ class UserAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     filter_horizontal = ('user_permissions',)
     
 
-#admin.site.register(User, UserAdmin)
-
-#@permission_required('accounts.UserProxyAdmin')
-
-
-
 
 @admin.register(UserProxy)
-class UserProxyAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
+class UserProxyAdmin(admin.ModelAdmin):
 
+    
 
     list_display = ['email','first_name', 'active_sub','first_step', 'first_order']
     fieldsets = [
-        ('Base data', {
-            'fields':('email','first_name', 'last_name', 'phone_number', 'city')
+        ('Contact', {
+            'fields':('email', 'phone_number')
             }
         ),
-        ('survey data', {
-            'fields':('date_birthday', 'first_step', 'first_order')
+
+        ('User', {
+            'fields':('first_name', 'last_name', 'date_birthday')
             }
         ),
-        ('consents data', {
+        
+        ('Survey data', {
+            'fields':( 'first_step', 'first_order')
+            }
+        ),
+        ('Consents data', {
             'fields':('regulations', 'regulations_id', 'active_sub', 'id_sub')
             }
         ),
-        ('price data', {
+        ('Price data', {
             'fields':('price_base',)
             }
         ),
         
         ]
+    
+    
+@admin.register(CustomerAdress)
+class CustomerAdressAdmin(admin.ModelAdmin):
+    # = ['user', 'city']
+    list_display = ['user', 'city', 'adress_type']
+    fieldsets = [
+        ('None',{
+            'fields':('user','adress_type',)
+        }),
+        ('Adress', {
+            'fields':('adress_line_1', 'adress_line_2', 'post_code', 'city', 'country')
+            }
+
+        ),
+    ]
+    

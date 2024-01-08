@@ -1,6 +1,7 @@
 from datetime import date
 from promotions.models import Coupon
 
+
 def Payment(price, user_email, order_id):
 
     payment_status = 'payment_accepted' #waiting_for_payment, payment_accepted, payment_failture
@@ -78,3 +79,5 @@ def CheckingCoupon(user_email, coupon_name, base_price):
 
 
     return {'is_active':is_active, 'price_coupon':price_coupon,'type_coupon':type_coupon, "error_coupon": error}
+
+

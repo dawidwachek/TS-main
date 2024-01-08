@@ -6,6 +6,7 @@ from scripts.bot import NewUserBot
 from settings.models import Price
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def page_logout(request):
     #empty logout page and return login view
@@ -17,10 +18,12 @@ def accounts(request):
     return redirect('/accounts/login',{})
 
 def login(request):
+    messages.error(request, 'empty adress e-mail')
     if request.user.is_authenticated:
         return redirect('/accounts/profile', {})
     else:
         if request.method == "POST":
+            #messages.error(request, 'empty adress e-mail')
             #getting informations from view
             email = request.POST.get("email")
             password = request.POST.get("password")
@@ -31,7 +34,8 @@ def login(request):
             #checking login form
             if email == "":
                 error = "empty adress e-mail"
-                return render(request, 'login.html',{'error': error})
+                messages.error(request, 'empty adress e-mail')
+                #return render(request, 'login.html',{'error': error})
             if password == "" :
                 error = "empty password"
                 return render(request, 'login.html',{'error': error})
@@ -76,7 +80,12 @@ def register(request):
         #getting data from view
         email = request.POST.get("email")
         password = request.POST.get("password")
-        check_regulations = request.POST.get("check_regulations")        
+        check_regulations = request.POST.get("check_regulations")
+
+        
+
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
         
 
         #checking register form
@@ -112,8 +121,9 @@ def register(request):
             #register account
             User.objects.create_user(email=email, password=password)
 
-            
-            
+            #save user proxy
+            user_proxy = UserProxy(email = email, first_name=first_name, last_name=last_name)
+
     
             #login to account
             user = authenticate(request,email=email, password=password)

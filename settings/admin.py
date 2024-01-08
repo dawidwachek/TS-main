@@ -1,7 +1,11 @@
 from django.contrib import admin
-from .models import Regulation, Price, ActivityLog
+from .models import Regulation, Price, ActivityLog, QuestionSequence, QuestionItem, Translation
+
 
 # Register your models here.
+
+
+#register view for models
 
 @admin.register(Regulation)
 class RegulationAdmin(admin.ModelAdmin):
@@ -22,3 +26,33 @@ class ActivityLogAdmin(admin.ModelAdmin):
     readonly_fields = ['activity_id', 'created_at','activity_type', 'user_log', 'text_log', 'status_log']
     list_filter = ['activity_type', 'status_log', 'status_log']
     search_fields = ['user_log', 'activity_id']
+
+
+#register Items line
+
+@admin.register(QuestionItem)
+class QuestionItemAdmin(admin.ModelAdmin):
+    readonly_fields = ['sequence']
+
+class QuestionSequenceInline(admin.TabularInline):
+    readonly_fields = ('sequence',)
+    model = QuestionItem
+    extra = 0
+    
+
+
+#register View with Items line
+
+@admin.register(QuestionSequence)
+class QuestionSequenceAdmin(admin.ModelAdmin):
+    readonly_fields = ['question_sequence_id', 'man']
+    inlines = [QuestionSequenceInline]
+    
+    #inlines = [QuestionSequenceItemInLine]
+
+@admin.register(Translation)
+class TranslationAdmin(admin.ModelAdmin):
+    search_fields = ['tag']
+    list_display = ['tag', 'l_en', 'l_pl', 'l_de']
+
+    

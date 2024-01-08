@@ -1,31 +1,22 @@
 from django.db import models
-from core.models import Questionnaire
+from core.models import Questionnaire, Product, ResultItem
+#from accounts.models import User
 
-class Item(models.Model):
-    item_id = models.AutoField(primary_key=True)
-    email_adress = models.EmailField(max_length=255)
-    item_status = models.CharField(choices=[
-        ('IC', 'Item Created'),
-        ('IW', 'Item Verified'),
-    ], default="IC", max_length=255)
-    editor_email = models.EmailField(max_length=255, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    language = models.CharField(choices=[
-        ("PL", "Polish"),
-        ("EN", "English"),
-    ], default="EN", max_length=255)
 
-    def __int__(self):
-        #return self.item_id
-        return self.item_id
+#survey result 
+class SurveyResult(models.Model):
+    id = models.AutoField(primary_key=True)
+    survey = models.ForeignKey(Questionnaire, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
     
-    
-    class Meta:
-        ordering = ('item_id',)
+    def __str__(self):
+        return f'{self.id}'
 
-    
-    
+#survey result - connetcting
+class SurveyResultItem(models.Model):
+    survey = models.ForeignKey(SurveyResult, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
+    result_item = models.ForeignKey(ResultItem, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
+
+#order
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
     order_status = models.CharField(choices=[
@@ -38,33 +29,51 @@ class Order(models.Model):
         ("OS", "Order Sended"),
     ],default='OC', max_length=255)
     email_adress = models.EmailField(max_length=255)
+    #TODO: change user_name to auto complete
     user_name = models.CharField(max_length=30, blank=True)
+    #TODO: add language and pair with translations
     language = models.CharField(choices=[
         ("PL", "Polish"),
         ("EN", "English"),
     ], default="EN", max_length=255)
     name_coupon = models.CharField(max_length=15, null=True, blank=True)
-    original_price = models.DecimalField(max_digits=7, decimal_places=2, null=True)
-    pay_price = models.DecimalField(max_digits=7, decimal_places=2)
+    original_price = models.DecimalField(max_digits=7, decimal_places=2, default=None, blank=True, null=True)
+    pay_price = models.DecimalField(max_digits=7, decimal_places=2, default=None, blank=True, null=True)
     editor_email = models.EmailField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    item_order = models.ForeignKey('orders.Item', related_name="items", null=True, blank=True, on_delete=models.CASCADE)
-    questionnaire_id = models.CharField(max_length=15, null=True, blank=True)
     visible = models.BooleanField(default=True)
-    
-    #questionnaire_id = models.ForeignKey(Questionnaire, on_delete=models.CASCADE, related_name="questionnaire", null=True, blank=True)
-    #test = models.ManyToManyField(Item, null=True, blank=True)
-    
 
     def __int__(self):
         return self.order_id
+    def __str__(self):
+        return f'#{self.order_id}'
 
-
-
-
-
-
+class ItemOrder(models.Model):
+    id = models.AutoField(primary_key=True)
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
+    survey = models.ForeignKey(Questionnaire, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
+    survey_result = models.ForeignKey(SurveyResult, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
     
 
+
+
+
+class Subscription(models.Model):
+    sub_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('accounts.User', on_delete=models.DO_NOTHING)
     
+
+
+
+class OrderResult(models.Model):
+    id = models.AutoField(primary_key=True)
+    survey = models.ForeignKey(Questionnaire, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
+    #user = models.ForeignKey('accounts.User', on_delate=models.DO_NOTHING )
+    #Result Item Inline
+    
+    
+class OrderResultItem(models.Model):
+    order_result = models.ForeignKey(OrderResult, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)
+    result_item = models.ForeignKey(ResultItem, on_delete=models.DO_NOTHING, default=None, blank=True,null=True)

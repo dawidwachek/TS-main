@@ -1,0 +1,28 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="home">
+        <div class="home-content">
+            <h1> Hello, </h1>
+            <h3>{{questions}}</h3>
+            <h3>{{survey_len}}</h3>
+            {% for question in questions %}
+                <h3>question</h3>
+                <h3>{{question}}</h3>
+            {% endfor %}
+
+           
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>
