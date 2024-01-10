@@ -18,7 +18,7 @@ class Question(models.Model):
     name = models.CharField(max_length=50)
     question_text = models.CharField(max_length=255, blank=True)
     question_description = models.TextField(default=None, blank=True, null=True)
-    question_type = models.CharField(choices={
+    question_types = models.CharField(choices={
         ('text', 'Text'),
         ('button', 'Button'),
         ('choice', 'Choice'),

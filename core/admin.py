@@ -58,7 +58,7 @@ class AnswerAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'question_type']
+    list_display = ['name', 'question_types']
     search_fields = ['name']
     readonly_fields = ['question_id']
     #inlines = [AnswerItemInline, GoalItemInline, ExclusionItemInline]
