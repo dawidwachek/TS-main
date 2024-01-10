@@ -1,0 +1,83 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="body">
+        <div class="container padding">
+            <h1>basic questions</h1>
+            <h3>we want to get to know you better</h3>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div id="weight">
+                    <label for="{{ form.weigh.id_for_label }}">{{ form.weigh.label }}:  </label>
+                    {{ form.weigh }}
+                </div>
+                <div id="training">
+                    <label for="{{ form.training.id_for_label }}">{{ form.training.label }}:  </label>
+                    {{ form.training }}
+                </div>
+                <div id="training_container">
+                    <label for="{{ form.often_training.id_for_label }}">{{ form.often_training.label }}:  </label>
+                    {{ form.often_training }}
+                </div>
+                <div id="injury">
+                    <label for="{{ form.injury.id_for_label }}">{{ form.injury.label }}:  </label>
+                    {{ form.injury }}
+                </div>
+                <div id="injury_container">
+                    <label for="{{ form.often_injury.id_for_label }}">{{ form.often_injury.label }}:  </label>
+                    {{ form.often_injury }}
+                </div>
+                
+                <div>
+                    <button type="submit">Next</button>
+                </div>
+                    
+            </form>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const training = document.getElementById("id_training");
+                    const training_container = document.getElementById("training_container");
+                    training_container.style.display = "none";
+            
+                    training.addEventListener("change", function () {
+                        if (training.checked) {
+                            training_container.style.display = "block";
+                        } else {
+                            training_container.style.display = "none";
+                        }
+                    });
+                });
+                document.addEventListener("DOMContentLoaded", function () {
+                    const injury = document.getElementById("id_injury");
+                    const injury_container = document.getElementById("injury_container");
+                    injury_container.style.display = "none";
+            
+                    injury.addEventListener("change", function () {
+                        
+                        if (injury.checked) {
+                            injury_container.style.display = "block";
+                        } else {
+                            injury_container.style.display = "none";
+                        }
+                    });
+                });
+            </script>
+            
+            
+            
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>

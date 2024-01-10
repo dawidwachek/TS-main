@@ -1,0 +1,84 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="full-body-center">
+        <div class="first-row">
+            <form method="POST">
+                {% csrf_token %}
+                    <h3>Pay order #{{order.order_id}} </h3>
+                    <h5>your questionnaire: {{order.questionnaire_id}} </h5>
+                    <h5>Price: {{order.pay_price}} </h5>
+                    <div "coupon-container">
+                        <h5>coupon:</h5>
+                        <input type="text" name="coupon_field" placeholder='coupon'>copon</input>
+                    </div>
+                    
+                    <div>
+                        <!--  check coupon -->
+                        <button type="submit" class="button button-home" name="button_coupon">button coupon</button>
+                    </div>
+                    {%if new_price != none%}
+                        <div>
+                            <h5>pay to price: {{new_price}}</h5>
+                        </div >
+                    {%endif%}
+                    
+                    {%if order.get_order_status_display == 'Payment Accepted'%}
+                        
+                        <div>
+                            <a type="submit" href="/orders/{{order.order_id}}/" class="order_button">go to order</a>
+                        </div>
+                    {%endif%}
+
+                    <div>
+                        <h5 class="error_text">{{error}}</h5>
+                    </div>
+
+                    {%if order.get_order_status_display == 'Waiting for Payment'%}
+                        
+                        <div>
+                            <h4>Your Training:  </h4>
+                            <a href="/orders/{{order.order_id}}/" class="order_button">go to order</a>
+                        </div>
+                    {%endif%}
+                    
+
+                    {%if order.get_order_status_display == 'Order Created'%}
+                        
+                        <div>
+                            <!--   pay order -->
+                            <button type="submit" name="button_pay" >Pay order</button>
+                        </div>
+                    {%endif%}
+
+                    {%if order.get_order_status_display == 'Waiting for Payment'%}
+                        
+                        <div>
+                            <button type="submit">Pay order</button>
+                        </div>
+                    {%endif%}
+                    {%if order.get_order_status_display == 'Payment Error'%}
+                        
+                        <div>
+                            <button type="submit">Pay order</button>
+                        </div>
+                    {%endif%}
+                
+              </form>
+            
+            
+            
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>

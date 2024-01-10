@@ -1,0 +1,89 @@
+{% include 'base.html' %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+
+
+<body>
+    
+    
+
+    
+    
+    <section class="body_column">
+        <div class="left-column">
+            <h1> Hello {{user_proxy.first_name}}, </h1>
+            <div>
+                <h5>Name: {{user_proxy.first_name}} {{user_proxy.last_name}} </h5>
+            </div>
+            <div>
+                <h5>E-mail adress: {{user_proxy.email}} </h5>
+            </div>
+            <div> 
+                <h5>Phone number: {{user_proxy.phone_number}} </h5>
+            </div>
+
+            <div class="button-container">
+                <a type="submit" href="/questionnaire" class="button">Create new training</a>
+            </div>
+
+            <div>
+                <h6>or write to support to consultation</h6>
+            </div>
+
+        </div>
+        <div class="right-column">
+            <div>
+                <div>
+                    <h5> Order list: </h5>
+                </div>
+                <div class="container">
+                    {% for order in orders reversed %}
+
+                        <div class="order_view">
+                            <div class="order_informations">
+                                <h5>order #{{order.order_id}} </h5>
+                                <h5>order status: {{order.get_order_status_display}} </h5>
+                                <h5>pay price: {{order.pay_price}} </h5>
+                                <h5>created at: {{order.created_at}} </h5>
+                            <div>
+                            {%if order.get_order_status_display == 'Order Created'%}
+                        
+                                <div class="order_button_container">
+                                    <a type="submit" href="/orders/payment/{{order.order_id}}/" class="order_button">pay order #{{order.order_id}}</a>
+                                </div>
+                            {%endif%}
+                            {%if order.get_order_status_display != 'Order Created'%}
+                        
+                                <div class="order_button_container">
+                                    <a type="submit" href="/orders/{{order.order_id}}/" class="order_button">order #{{order.order_id}}</a>
+                                </div>
+                            {%endif%}
+                            
+                            <!--<div class="order_button_container">
+                                <a type="submit" href="/orders/{{order.order_id}}/" class="order_button">view order #{{order.order_id}}</a>
+                            </div>-->
+                        </div>
+
+                    
+                                           
+                    {%empty%}
+                            <h5>empty list</h5>
+                    {% endfor %}
+                </div>
+
+
+
+            </div>
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>

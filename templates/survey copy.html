@@ -1,0 +1,73 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="content padding">
+        <div class="container padding">
+            <h1> Hello, </h1>
+
+            <h1> </h1>
+            <h1> </h1>
+            <h1> </h1>
+            
+            <form method="post">
+            {% csrf_token %}
+                {% for q in questions %}
+                    <h2>{{q.question}}</h2>
+                
+                    {% for answer in answers%}
+
+                        {% if answer.question == q.question %}
+
+                            {% if q.question.question_type == "text" %}
+                                <div>
+                                    <label for="{{q.question}}">{{answer.answer.answer}}</label>
+                                    <input type="text" id="{{q.question}}" name="{{q.question}}" value="" />
+                                    
+                                </div>
+                            {% endif %}
+                            {% if q.question.question_type == "button" %}
+                                <div>
+                                    <input type="radio" id="{{q.question}}" name="{{q.question}}" value="{{answer.answer.answer}}" />
+                                    <label for="{{q.question}}">{{answer.answer.answer}}</label>
+                                </div>
+                            {% endif %}
+
+                            {% if q.question.question_type == "choice" %}
+                                <div>
+                                    <input type="checkbox" id="{{answer.answer.answer}}" name="{{answer.answer.answer}}" value="{{answer.answer.answer}}" />
+                                    <label for="{{answer.answer.answer}}">{{answer.answer.answer}}</label>
+                                </div>
+                            {% endif %}
+                            {% if q.question.question_type == "integer" %}
+                                <div>
+                                    <input type="number" id="{{q.question}}" name="{{q.question}}" value="{{answer.answer.answer}}" />
+                                    <label for="{{q.question}}">{{answer.answer.answer}}</label>
+                                </div>
+                            {% endif %}
+
+                            
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+
+                <button type="submit">Save survey</button>
+
+            </form>
+
+            
+
+           
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>
