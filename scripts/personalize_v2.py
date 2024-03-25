@@ -20,6 +20,14 @@ def Personalize(order_id):
         #get surveys
         survey = i.survey
 
+        #get product type
+        product_type = i.product.product_type
+        
+        mixer_category = i.product.mixer_category.all()
+
+        print('product type' + str(product_type))
+        print('mixer categpry' + str(mixer_category))
+
         #get answers to survey
         survey_answer_items = SurveyAnswerItem.objects.filter(survey=survey).all()
         for a in survey_answer_items:
