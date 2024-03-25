@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from constance import config
+from settings_constance import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +34,7 @@ SECRET_KEY = 'django-insecure-x-pwt2xz9f_6!nayv7bo4%k!g#cg8(o9+54*3o0fh!d@h&8n9g
 DEBUG = True
 
 
-ALLOWED_HOSTS = ["192.168.1.148", "127.0.0.1", 'dawidw.pythonanywhere.com','13.48.147.253']
+ALLOWED_HOSTS = ['.vercel.app', "127.0.0.1", 'dawidw.pythonanywhere.com','13.48.147.253']
 
 handler404 = 'core.views.error404'
 
@@ -46,12 +48,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'simple_history',
+
+    'constance',
+    'constance.backends.database',
+
+    'ckeditor',
     'orders',
     'accounts',
     'core',
     'promotions',
     'settings'
+
 ]
+
+### CONSTANCE ###
+
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+
+
+### END CONSTANCE ###
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -61,6 +78,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'trainingstudio.urls'
@@ -93,6 +112,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+#DATABASES = {
+#    'default':{
+#        'ENGINE': 'django.db.backends.postgresq1',
+#        'NAME': 'gym_1',
+#        'USER': 'postgres',
+#        'PASSWORD': 'cyfjek-naqwi5-tocQaj',
+#        'HOST':'database-1.cdqgqakq6dmj.eu-north-1.rds.amazonaws.com',
+#        'PORT':'5432',
+#    }
+#}
 
 
 # Password validation
@@ -119,7 +148,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+LANGUAGES = [
+    ('en', ("English")),
+    ('pl', ("Polish")),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/',
+]
+
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 

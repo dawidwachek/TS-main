@@ -1,0 +1,8 @@
+-- database: /Users/dawidwachek/Desktop/TS-main/db.sqlite3
+
+-- Use the ▷ button in the top right corner to run the entire file.
+
+SELECT * FROM orders_order
+ORDER BY `email_adress` DESC
+;
+

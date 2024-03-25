@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import OrderForm
-from .models import Order
+from .models import Order, ItemOrder, OrderResult, OrderResultItem
 from scripts.payment import Payment, CheckingCoupon
 from scripts.bot import OrderBot
+from scripts.personalize_v2 import Personalize
 from accounts.models import UserProxy
+from constance import config
+from django.utils import timezone
 
 # Create your views here.
 def orders(request):
@@ -14,7 +17,7 @@ def order(request, order_id):
     
     
 
-    if Order.objects.get(order_id=order_id).email_adress == request.user.email:
+    if Order.objects.get(order_id=order_id).user == request.user:
         if Order.objects.get(order_id=order_id).visible == False:
             return redirect('error')
         
@@ -23,19 +26,32 @@ def order(request, order_id):
         
         print('order:' + str(order.order_status))
         #print('order site')
+        item_order = ItemOrder.objects.filter(order=order).last().order_result
+    
+        print("order result", str(item_order))
         price = 100
         if request.method == "POST":
             pay = Payment(price=price, user_email=request.user.email, order_id=order_id)
             if pay == 'payment_accepted':
 
                 
-                order_pay.update(order_status = "PA")
+                order_pay.update(order_status = "PA", paid_at=timezone.now())
                 #OrderBot(order_id=order_id, user_email=request.user.email, pay_price=price)
+
+                if config.AUTO_CREATE_RESULT:
+                    
+                    if config.USE_NEW_MIXER:
+                        #print('new_mixer')
+                        Personalize(order_id = order_id)
+                        
+                    else:
+                        print('old_mixer')
+
                 return redirect('paymentsuccess')
             
         else:
             pass
-        return render(request, 'order.html',{'order': order})
+        return render(request, 'order.html',{'order': order, 'result_id': item_order})
     
     if request.user.is_admin:
         order = Order.objects.filter(order_id = order_id)
@@ -65,9 +81,18 @@ def payment(request, order_id):
             OrderBot(order_id=order_id, user_email=request.user.email, pay_price=new_price)
             return redirect('order', order.pk) 
     else:
+        ## if pay
+        
         return render(request, 'payment.html', {'order': order})
     return render(request, 'payment.html', {'order': order})
     
 
 def payment_success(request):
     return render(request, 'payment_success.html', {})
+
+
+def result(request, result_id):
+    order_result = OrderResult.objects.filter(id=result_id).last()
+    
+    result = OrderResultItem.objects.filter(order_result=result_id).all()
+    return render(request, 'result.html',{'result': result})

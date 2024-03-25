@@ -4,6 +4,7 @@
 <body>
     {% include 'navbar.html' %}
     {% block content %}
+    
     <section class="content padding">
         <div class="container padding">
             <h1> Hello, </h1>
@@ -15,6 +16,7 @@
             <form method="post">
             {% csrf_token %}
                 {{test_result}}
+                {{translate.l_pl}}
                 <button type="submit">Test</button>
 
             </form>

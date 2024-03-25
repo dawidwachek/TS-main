@@ -6,4 +6,4 @@ from django import forms
 class OrderForm(ModelForm):
     class Meta:
         model = Order
-        fields = ['email_adress','user_name','pay_price','original_price']
+        fields = ['user','user_name','pay_price','original_price']

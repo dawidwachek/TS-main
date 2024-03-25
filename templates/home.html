@@ -10,20 +10,9 @@
             <h1 class="full-text">First online personalized training</h1>
         </div>
         <div class="container padding">
-            <h3>Who we are?</h3>
-            <p>we are young team who can change your training</p>
-            <h3>Why?</h3>
-            <h4>we know how your traing is now:</h4>
-            <p>now you pay a lot of money</p>
-            <p>now you not understand what you must do</p>
-            <p>now you are not doing the training correctly</p>
-            <p>now you waiting for personal training a lot of time</p>
-            <h3>What we do?</h3>
-            <p>we create personal training in 12h</p>
-            <p>with us you pay little money</p>
-            <p>with us you have a detailed description in the training</p>
-            <p>with us you have videos with instructions</p>
-            <p>with us you can additionally consult the training</p>
+            <h3>Text1</h3>
+            <p>Text2</p>
+           
             <!-- here container with price -->
            
 
@@ -31,11 +20,24 @@
         <div class="second-row">
             <div >
                 <a href="/faq" class="text-button">Show more</a>
-                <a href="/accounts/register" class="button button-home">Try training</a>
+                <a href="/accounts/login" class="button button-home">You have account?</a>
                 
             </div>
             <div>
-                <a href="/accounts/login" class="text-button">You have account? Create new training</a>
+                {%for p in products%}
+                    <div>
+                        <h3>{{p.name}}</h3>
+                        {%for pr in price%}
+                            {%if pr.product.tag == p.tag%}
+                                <h4>price: {{pr.price}} {{pr.currency}}</h4>
+                            {%endif%}
+                        {%endfor%}
+                    </div>
+                    <div>
+        
+                        <a href="/product/{{p.tag}}" class="button button-home">Go to {{p.name}}</a>
+                    </div>
+                {%endfor%}
             </div>
             
         </div>

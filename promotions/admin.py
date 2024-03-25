@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Coupon, Reflink, Banner
+from .models import Coupon, Reflink, Banner, Voucher
 
 
 @admin.register(Reflink)
@@ -23,3 +23,10 @@ class BannerAdmin(admin.ModelAdmin):
     readonly_fields = ['banner_id', 'created_at']
     search_fields = ['text']
     list_filter = ['is_active', 'has_link']
+
+@admin.register(Voucher)
+class VoucherAdmin(admin.ModelAdmin):
+    list_display = ['id', 'slug', 'is_active', 'for_user','user']
+    readonly_fields = ['is_used']
+    search_dields = ['id', 'slug']
+    list_filter = ['is_active']

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 
 # Create your models here.
 class Reflink(models.Model):
@@ -48,3 +49,19 @@ class Banner(models.Model):
     start_at = models.DateField(default=None, blank=True, null=True)
     end_at = models.DateField(default=None, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Voucher(models.Model):
+    id = models.AutoField(primary_key=True)
+    is_active = models.BooleanField(default=True)
+    slug = models.CharField(max_length=100, default=None, blank=True, null=True, help_text="is autocomplete")
+    for_user = models.BooleanField(default=False)
+    user = models.EmailField(max_length=100)
+    max_uses = models.IntegerField(default=1, blank=False, null=False)
+    is_used = models.IntegerField(default=1, blank=False, null=False)
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug =  get_random_string(length=40)
+        if not self.name:
+            self.name = self.slug
+        return super().save(*args, **kwargs)

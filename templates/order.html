@@ -19,6 +19,13 @@
                             <a class="small_text_button">training ID {{training_id}}</a>
                         </div>
                     {%endif%}
+
+                    {%if order.get_order_status_display == 'Order Sended'%}
+                        
+                        <div>
+                            <a href="/orders/result/{{result_id}}" class="buttonLogin">go to result {{result_id}}</a>
+                        </div>
+                    {%endif%}
                     
 
                     {%if order.get_order_status_display == 'Order Created'%}

@@ -55,13 +55,13 @@ def login(request):
                 obj = UserProxy.objects.filter(email=email)
                 if not obj:
                     #return user proxy add informations
-                    return redirect('register_more_info')       
+                    return redirect('profile')       
 
                 #check first questionnaire
                 value = UserProxy.objects.get(email = request.user.email).first_step
                 if value:
                     #return first questionnaire site
-                    return redirect('/questionnaire', {})
+                    return redirect('/product/test', {})
                 else:
                     #return profile view
                     return redirect('/accounts/profile', {})
@@ -157,8 +157,8 @@ def profile(request):
     if not obj:
         return redirect('register_more_info')   
     else:
-        user_proxy = UserProxy.objects.get(email = request.user.email)
-        orders = Order.objects.filter(email_adress = request.user.email).filter(visible = True)
+        user_proxy ="none" # UserProxy.objects.get(email = request.user.id)
+        orders = Order.objects.filter(user= request.user).filter(visible = True)
         return render(request, 'profile.html',{"user_proxy": user_proxy, "orders": orders})
     
     

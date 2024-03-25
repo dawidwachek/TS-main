@@ -32,11 +32,13 @@ class ActivityLogAdmin(admin.ModelAdmin):
 
 @admin.register(QuestionItem)
 class QuestionItemAdmin(admin.ModelAdmin):
-    readonly_fields = ['sequence']
+    readonly_fields = ['sequence', 'min_value', 'max_value']
+    
 
 class QuestionSequenceInline(admin.TabularInline):
-    readonly_fields = ('sequence',)
+    readonly_fields = ['sequence','min_value','max_value']
     model = QuestionItem
+    autocomplete_fields = ['answer', 'question']
     extra = 0
     
 
@@ -45,7 +47,7 @@ class QuestionSequenceInline(admin.TabularInline):
 
 @admin.register(QuestionSequence)
 class QuestionSequenceAdmin(admin.ModelAdmin):
-    readonly_fields = ['question_sequence_id', 'man']
+    readonly_fields = ['question_sequence_id']
     inlines = [QuestionSequenceInline]
     
     #inlines = [QuestionSequenceItemInLine]

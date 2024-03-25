@@ -1,9 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 import sys
+from ckeditor.fields import RichTextField
 from core.models import Product
 from core.models import Question
-from core.models import Answer
+from core.models import Answer, AnswerItem
 
 def validator_tag(value):
     if ' ' in value:
@@ -46,8 +47,9 @@ class Price(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2, default=100)
     created_at = models.DateTimeField(auto_now_add=True)
     currency = models.CharField(choices=[
-        ('PL', 'PLN'),
-        ('EN', 'GBP')
+        ('PLN', 'PLN'),
+        ('GBP', 'GBP'),
+        ("EURO", 'EURO'),
     ],default="PL", max_length=5)
     valid_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -96,7 +98,7 @@ class QuestionSequence(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, default=None, null=True, blank=True)
 
-    man = Question.objects.all()
+    #man = Question.objects.all()
 
 
     class Meta:
@@ -119,15 +121,38 @@ class QuestionSequence(models.Model):
 
 class QuestionItem(models.Model):
     sequence = models.AutoField(primary_key=True, default=None)
-    #test = models.CharField(max_length=100, default = None, blank=True, null=True)
-    
-    
-    
-    #answer = models.CharField(default=None, max_length=100)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, default=None)
-    #answer = models.OneToOneField(Answer, on_delete=models.CASCADE, default=None, blank=True)
-    #question_text = models.CharField(Question.question_description, max_length=255, default=None)
+    answer = models.ManyToManyField(Answer, default=None, blank=True)
     question_sequence = models.ForeignKey(QuestionSequence, on_delete=models.CASCADE, default=None)
+    min_value = models.CharField(blank=True, null=True, max_length=5, default=0, help_text = 'save this item in QuestionItem to update min value')
+    max_value = models.CharField(blank=True, null=True, max_length=5, default=0, help_text = 'save this item in QuestionItem to update max value')
+
+    def save(self, *args, **kwargs):
+        mn_value = AnswerItem.objects.filter(question=self.question)
+        l = []
+        for m in mn_value:
+            if m.minimum_value != None:
+                l.append(m.minimum_value)
+        self.min_value = min(l)
+
+        mx_value = AnswerItem.objects.filter(question=self.question)
+        l = []
+        for m in mx_value:
+            if m.maximum_value != None:
+                l.append(m.maximum_value)
+        self.max_value = max(l)
+
+        return super().save(*args, **kwargs)
+
+    
+    def mx_value(self):
+        max_value = AnswerItem.objects.filter(question=self.question)
+        l = []
+        for m in max_value:
+            if m.maximum_value != None:
+                l.append(m.maximum_value)
+        o = max(l)
+        return o
 
     def __str__(self):
         return f'{self.question}'
@@ -138,7 +163,7 @@ class Translation(models.Model):
     l_pl = models.TextField(blank=True, null=True, default=None)
     l_de = models.TextField(blank=True, null=True, default=None)
     l_it = models.TextField(blank=True, null=True, default=None)
-    l_cz = models.TextField(blank=True, null=True, default=None)
+    #l_cz = RichTextField(null=True, blank=True)
     
     def __str__(self):
         return f'{self.tag}'

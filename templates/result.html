@@ -1,0 +1,42 @@
+{% include 'base.html' %}
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    
+    <section class="content padding">
+        <div class="container padding">
+            <h1> Hello, </h1>
+
+            <h1> </h1>
+            <h1> </h1>
+            <h1> </h1>
+            
+            <form method="post">
+            {% csrf_token %}
+                {{test_result}}
+                {% for r in result%}
+                    <h3> {{r.result_item}} </h3>
+                    <h5> Description: {{r.result_item.description}} </h5>
+                    <h5> Link: {{r.result_item.url}} </h5>
+                {%endfor%}
+                {{translate.l_pl}}
+                
+
+            </form>
+
+            
+
+           
+        </div>
+
+        
+    </section>
+    
+
+
+</body>
+{% endblock %}
+
+</html>

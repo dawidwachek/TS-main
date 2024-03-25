@@ -1,74 +1,353 @@
 {% include 'base.html' %}
 
+<style>
+    .hidden {
+        display: none;
+    }
+    .next_que{
+        display: block;
+    }
+</style>
+
 
 <body>
     {% include 'navbar.html' %}
     {% block content %}
     <section class="content padding">
         <div class="container padding">
-            <h1> Hello, </h1>
+            <!--<h1> Hello, </h1>-->
 
             <h1> </h1>
             <h1> </h1>
             <h1> </h1>
             
-            <form method="post">
+            <form method="POST">
             {% csrf_token %}
+
                 {% for q in questions %}
-                    <h2>{{q.question.question_text}}</h2>
-                
-                    {% for answer in answers%}
 
-                        {% if answer.question == q.question %}
+                    <div id="question_{{forloop.counter}}" class="question" value="{{q}}">
+                        {% for a in q.answer.all %}
+                            <div id="{{q}}_ansque_{{forloop.counter}}" class="ansque" value="{{a.name}}"></div>
+                    
+                        {% endfor%}
+                        
+                        <h2>{{q.question.question_text}}</h2>
 
-                            {% if q.question.question_type == "text" %}
-                                <div >
-                                    <label for="{{answer.answer.answer}}">{{answer.answer.answer}}</label>
-                                    <input type="text" id="{{answer.answer.answer}}" name="{{answer.answer.answer}}" value="" />
-                                    
-                                </div>
-                            {% endif %}
-                            {% if q.question.question_type == "button" %}
-                                <div>
-                                    <!--name is sum for radio -->
-                                    <input type="radio"id="{{answer.answer.answer}}" name="{{q.question}}" value="{{answer.answer.name}}"  />
-                                    <label for="{{answer.answer.answer}}">{{answer.answer.answer}}</label>
-                                </div>
-                            {% endif %}
+                        {% for answer in answers%}
+                            
+                            {% if answer.question == q.question %}
 
-                            {% if q.question.question_type == "choice" %}
-                                <div>
-                                    <input type="checkbox" id="{{answer.answer.answer}}" name="{{answer.answer.answer}}" value="{{answer.answer.answer}}" />
-                                    <label for="{{answer.answer.answer}}">{{answer.answer.answer}}</label>
-                                </div>
-                            {% endif %}
-                            {% if q.question.question_type == "integer" %}
-                                <div>
-                                    <input type="number" id="{{answer.answer.answer}}" name="{{answer.answer.answer}}" value="{{answer.answer.answer}}" />
-                                    <label for="{{answer.answer.answer}}">{{answer.answer.answer}}</label>
-                                </div>
-                            {% endif %}
+                                <!--<h2>answer to skippable</h2>-->
+                                <!--{{q.answer.all}}    answer to skip-->
 
+                                {% if q.question.question_type == "text" %}
+                                    <div >
+
+                                        <input type="text" id="{{answer.answer.answer}}" name="{{answer.answer.answer}}" value="" custans="{{answer.answer.name}}" que="{{q.question}}"/>
+                                    </div>
+                                {% endif %}
+                                {% if q.question.question_type == "button" %}
+                                    <div>
+                                        <input type="radio"id="{{answer.answer.answer}}" name="{{q.question}}" value="{{answer.answer.name}}" class="tests" custans="{{answer.answer.name}}" que="{{q.question}}"/>
+                                        <label for="{{answer.answer.answer}}" id="test_{{answer.answer}}" >{{answer.answer.answer}}</label>
+                                    </div>
+                                {% endif %}
+
+                                {% if q.question.question_type == "choice" %}
+                                    <div>
+                                        <input type="checkbox" id="{{answer.answer.answer}}" name="{{answer.answer}}" value="{{answer.answer.name}}" class="tests" custans="{{answer.answer.name}}" que="{{q.question}}"/>
+                                        <label for="{{answer.answer.answer}}" id="test_{{answer.answer}}" >{{answer.answer.answer}}</label>
+                                    </div>
+                                {% endif %}
+
+                                {% if q.question.question_type == "category" %}
+                                    <div>
+
+                                        <input type="radio"id="{{answer.answer.answer}}" name="{{q.question}}" value="{{answer.answer.name}}" class="tests" custans="{{answer.answer.name}}" que="{{q.question}}"/>
+                                        <label for="{{answer.answer.answer}}" id="test_{{answer.answer}}">{{answer.answer.answer}}</label>
+                            
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if q.question.question_type == "integer" %}
+                            <div>
+                                <input type="number" id="{{q.question}}" name="{{q.question}}" value="{{q.question}}" min="{{q.min_value}}" max="{{q.max_value}}"/>
+                                <label for="{{q.question}}"></label>
+                                <h5 id="text_error"></h5>
+                            </div>
+                        
                             
                         {% endif %}
-                    {% endfor %}
+
+                                
+                           
+                        
+                    </div>
                 {% endfor %}
 
-                <button type="submit">Save survey</button>
+                <button type="submit" id="btn_save_survey" name="btn_save_survey" class="hidden">Save survey</button>
 
             </form>
-
-            
-
-           
-        </div>
-
+            <input type="button" id="backButton" value="Back Question" class="next_que" style="display: none;"></input>
+            <input type="button" id="btn_next" value="Next Question" class="next_que"></input>
+            <ul id="answerList"></ul>
         
+        </div>
     </section>
-    
-
 
 </body>
 {% endblock %}
 
 </html>
+
+<script>
+    const list_answers = [];
+    document.addEventListener("DOMContentLoaded", function(){
+        //var for answer
+        var test_button = document.querySelectorAll('.tests');
+        
+        //var for question skip
+        var questions = document.querySelectorAll('.question');
+        var currentQuestion = 0;
+        var btn_next = document.getElementById('btn_next');
+        var backButton = document.getElementById('backButton');
+        var endButton = document.getElementById('btn_save_survey');
+        var ansque = document.querySelectorAll('.ansque');
+
+        var errorText = document.getElementById('text_error')
+
+
+
+        for (var i = 0;i < questions.length; i++){
+
+            var tQue = document.getElementById('question_' + (i+1).toString());
+            var valChange = document.getElementById(tQue.getAttribute('value'));
+
+            
+
+            if (valChange != null){
+                valChange.addEventListener('input', function(event){
+
+                    console.log(valChange.getAttribute('value'))
+                    
+
+                    //checking value is number and is >min && <max
+                    var min = valChange.getAttribute('min');
+                    var max = valChange.getAttribute('max');
+
+                    if (!isNaN(event.target.value) && Number.isInteger(parseFloat(event.target.value))) {
+                        if (parseFloat(event.target.value) >= min && parseFloat(event.target.value) <= max){
+                            btn_next.disabled = false;
+                            errorText.innerHTML = '';
+
+                        }else{
+                            if (parseFloat(event.target.value) < min){
+                                errorText.innerHTML = 'value too low (minimum value: ' + min + ')';
+                            }
+                            if (parseFloat(event.target.value) > max){
+                                errorText.innerHTML = 'too much value (maximum value: ' + max + ')';
+                            }
+                            if (event.target.value.length === 0){
+                                errorText.innerHTML = '';
+                            }
+                            btn_next.disabled = true;
+
+                        };
+//--------------------------------------------------------
+
+                    }else {
+                        errorText.innerHTML = 'value is not integer';
+                        btn_next.disabled = true;
+
+                    }
+                })
+                console.log('que? '+valChange.getAttribute('value'))
+
+            }
+            
+            
+            
+            //valChange.addEventListener('input', function(){
+            //    console.log(valChange.getAttribute('type'))
+            //    console.log('change')
+            //});
+            
+        }
+
+
+
+        //block question without first
+        for (var i = 1; i < questions.length; i++){
+            questions[i].style.display = 'none';
+        }
+
+        btn_next.disabled = true;
+
+        //checking anwer is checked to disable 'btn_next' - next question button
+        function checkAnswerIsSelected(){
+
+            
+
+
+            var tQue = document.getElementById('question_' + String(currentQuestion+1));
+            
+
+            if (tQue !== null) {
+                var vQue = tQue.getAttribute("value");
+
+                for (let i = 0; i < test_button.length; i++){
+
+                    if (vQue === test_button[i].getAttribute('que')){
+                        
+                        if (list_answers.includes(test_button[i].getAttribute('custans'))){
+
+                            i = test_button.length;
+                            btn_next.disabled = false;
+
+                        }
+                        else{
+
+                            btn_next.disabled = true;
+
+                        }
+                        
+                    };
+                }
+
+            }
+
+        };
+
+        //-------------------------------------------------------------//
+
+        function checkQuestionIsSkipable(){
+
+            //check question in answer
+
+            var tQue = document.getElementById('question_' +[currentQuestion+1]);
+
+            if (tQue !== null) {
+                var vQue = tQue.getAttribute("value");
+
+                //search answers to skip for question
+                for (var i = 0; i < ansque.length; i++){
+
+                    for (var l = 0; l < ansque.length; l++){
+
+                        if((ansque[i].id).toString() === (vQue+'_ansque_'+[l+1]).toString()){
+    
+                            //get answer to check in list 
+                            var tAnsque = document.getElementById(ansque[i].id).getAttribute("value");
+    
+                            //if answer to skip for question is in list_answers checked, then skip
+                            if (list_answers.includes(tAnsque)) {
+                                
+                                updateCurrentQuestionNumberUp();
+                                i = ansque.length;
+                                l = ansque.length;
+    
+                            }
+                        
+                        }
+                        
+                    }   
+
+                }
+                
+            }
+             
+        }
+
+        //update question to next
+        function updateCurrentQuestionNumberUp(){
+
+            questions[currentQuestion].style.display = 'none';
+
+            btn_next.disabled = true;
+            
+            currentQuestion++;
+            
+
+            if (currentQuestion === (questions.length)) {
+                //show 'save button'
+                if (endButton.style.display === "block") {
+                    endButton.style.display = "none";
+                  } else {
+                    endButton.style.display = "block";
+                  };
+
+                //hide 'next button'
+                if (btn_next.style.display === "none") {
+                    btn_next.style.display = "block";
+                  } else {
+                    btn_next.style.display = "none";
+                  };
+            }
+
+            //block 
+            if (currentQuestion !== (questions.length)){
+                questions[currentQuestion].style.display = 'block';
+                checkAnswerIsSelected();
+            };
+
+            checkQuestionIsSkipable();
+            
+        }
+        //update question to last
+        function updateCurrentQuestionNumberDown(){
+        }
+
+
+        //if click btn_next update currentQuestion to up
+        btn_next.addEventListener('click', function(){
+            
+            updateCurrentQuestionNumberUp();
+
+        });
+
+        backButton.addEventListener('click', function(){
+            updateCurrentQuestionNumberDown();
+        });
+
+
+        //push answer to list_answers
+        //segregate 'answers btn'
+        for (let i = 0; i < test_button.length; i++){
+        
+            //checking answer is click
+            test_button[i].addEventListener("click", function(){
+
+                //check if is in list
+                //if is in list, remove
+                // if not in list push
+                if (list_answers.includes(test_button[i].getAttribute('custans'))){
+                    
+                    //get answer value
+                    var ansToRemove = list_answers.indexOf(test_button[i].getAttribute('custans'));
+                    //remove
+                    list_answers.splice(ansToRemove, 1); //remove element from list
+                    
+                }else{
+                    //push
+                    list_answers.push(test_button[i].getAttribute('custans'))
+                    
+                };
+
+                checkAnswerIsSelected();
+                
+                //if click radio buttion, update currentQuestion to up 
+                if (test_button[i].type === "radio"){
+                    updateCurrentQuestionNumberUp();
+                }
+                
+                console.log(list_answers)
+            });
+        };
+
+    });
+
+
+</script>

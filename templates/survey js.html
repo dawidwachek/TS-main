@@ -1,0 +1,191 @@
+{% include 'base.html' %}
+
+<style>
+    .hidden {
+        display: none;
+    }
+    .next_que{
+        display: block;
+    }
+</style>
+
+
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+    <section class="content padding">
+        <div class="container padding">
+            <!--<h1> Hello, </h1>-->
+
+            <h1> </h1>
+            <h1> </h1>
+            <h1> </h1>
+            
+            <form method="POST">
+            {% csrf_token %}
+
+                {% for q in questions %}
+
+                    
+                    
+                    <div id="question_{{ forloop.counter }}" class="question">
+
+                        
+                        <h2>{{q.question.question_text}}</h2>
+
+                        {% for answer in answers%}
+                            
+                            {% if answer.question == q.question %}
+
+
+                                <!--<h2>answer to skippable</h2>-->
+                                <!--{{q.answer.all}}    answer to skip-->
+                                
+
+                                {% if q.question.question_type == "text" %}
+                                    <div >
+
+                                        <input type="text" id="{{answer.answer.answer}}" name="{{answer.answer.answer}}" value="" />
+                                    </div>
+                                {% endif %}
+                                {% if q.question.question_type == "button" %}
+                                    <div>
+                                        {{answer.answer}}
+                                        <input type="radio"id="{{answer.answer.answer}}" name="{{q.question}}" value="{{answer.answer.name}}" class="tests"/>
+                                        <label for="{{answer.answer.answer}}" id="test_{{answer.answer}}" >{{answer.answer.answer}}</label>
+                                    </div>
+                                {% endif %}
+
+                                {% if q.question.question_type == "choice" %}
+                                    <div>
+                                        <input type="checkbox" id="{{answer.answer.answer}}" name="{{answer.answer.answer}}" value="{{answer.answer.answer}}" class="tests" />
+                                        <label for="{{answer.answer.answer}}" id="test_{{answer.answer}}" >{{answer.answer.answer}}</label>
+                                    </div>
+                                {% endif %}
+
+                                {% if q.question.question_type == "category" %}
+                                    <div>
+
+                                        <input type="radio"id="{{answer.answer.answer}}" name="{{q.question}}" value="{{answer.answer.name}}" class="tests"/>
+                                        <label for="{{answer.answer.answer}}" id="test_{{answer.answer}}">{{answer.answer.answer}}</label>
+                            
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if q.question.question_type == "integer" %}
+                            <div>
+                                <label for="{{q.question}}">que {{q.question.name}}</label>
+                                <input type="number" id="{{q.question}}" name="{{q.question}}" value="{{q.question}}" />
+                            </div>
+                        
+                            
+                        {% endif %}
+
+                                
+                           
+                        
+                    </div>
+                {% endfor %}
+
+                <button type="submit" id="save_survey" name="save_survey" class="hidden">Save survey</button>
+
+            </form>
+            <input type="button" id="nextButton" value="Next Question" class="next_que"></input>
+            <ul id="answerList"></ul>
+        
+        </div>
+    </section>
+
+</body>
+{% endblock %}
+
+</html>
+
+
+<script>
+    var test_button = document.querySelectorAll('.tests');
+    const list_answers = []
+    console.log(test_button)
+    for (let i = 0; i < test_button.length; i++) {
+        test_button[i].addEventListener("click", function() {
+            list_answers.push(test_button[i].value)
+            
+
+            console.log('ckk: ' + test_button)
+            console.log("cck: " + test_button[i].type)
+            
+            console.log("list: " + list_answers)
+        });
+    }
+</script>
+
+<script>
+    function endSurvey() {
+        var x = document.getElementById("save_survey");
+        if (x.style.display === "block") {
+          x.style.display = "none";
+        } else {
+          x.style.display = "block";
+        }
+      }
+</script>
+
+<script>
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var test_val = document.getElementById("test");
+        console.log(test_val);
+
+        var questions = document.querySelectorAll('.question');
+        var currentQuestion = 0;
+        var nextButton = document.getElementById('nextButton');
+        var x = document.getElementById("nextButton");
+        var currentQuestionNumberSpan = document.getElementById('currentQuestionNumber');
+        console.log(questions)
+        console.log(currentQuestion)
+    
+        // Ukryj wszystkie pytania oprócz pierwszego
+        for (var i = 1; i < questions.length; i++) {
+            questions[i].style.display = 'none';
+            
+        };
+    
+        // Funkcja do aktualizacji numeru obecnie wyświetlanego pytania
+        function updateCurrentQuestionNumber() {
+            currentQuestionNumberSpan.textContent = currentQuestion + 1;
+        };
+    
+        // Dodaj obsługę kliknięcia przycisku
+        nextButton.addEventListener('click', function () {
+            // Ukryj bieżące pytanie
+            questions[currentQuestion].style.display = 'none';
+    
+            // Przełącz do następnego pytania
+            currentQuestion++;
+    
+            // Jeśli dojdziemy do ostatniego pytania, wróć do pierwszego
+            if (currentQuestion === questions.length) {
+                //currentQuestion = 0;
+                endSurvey();
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                  } else {
+                    x.style.display = "none";
+                  }
+            }
+    
+            // Wyświetl nowe pytanie
+            questions[currentQuestion].style.display = 'block';
+    
+            // Aktualizuj numer obecnie wyświetlanego pytania
+            updateCurrentQuestionNumber();
+        });
+    
+        // Inicjalizuj numer obecnie wyświetlanego pytania
+        updateCurrentQuestionNumber();
+    });
+</script>
